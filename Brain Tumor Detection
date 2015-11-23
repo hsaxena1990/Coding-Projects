@@ -1,0 +1,39 @@
+% Brain Tumor detection using Image Processing Toolbox.
+clear all; clc; close all;
+
+% Read the MRI image 
+img = imread('mri_image.jpg');
+img = img(:,:,1);
+figure(1); imshow(img);
+title('Original Image');
+
+% Creating a binary image
+bw = im2bw(img);
+figure(2);imshow(bw,[]);
+title('Thresholded Image');
+
+% Choosing a structuring element for morphological operations in order to 
+% remove unwanted information from the binary image  
+se = strel('disk',10);
+img1 = imopen(bw,se);
+figure(3); imshow(img1,[]);
+title('Image after opening operation');
+
+% Detecting the boundary of the tumor and calculating its coordinates
+boundary = bwboundaries(img1);
+coord = boundary{1,1};
+
+% Plotting the original image overlapped with the detected tumor
+% coordinates.
+sz = size(coord);
+figure(4); imshow(img,[]); hold on;
+for i = 1:sz(1)
+plot(coord(i,2),coord(i,1),'o');
+end
+title('Overlapped tumor boundary onto the original image');
+
+figure(5); imshow(img,[]); hold on;
+for i = 1:sz(1)
+plot(coord(i,2),coord(i,1),'.');
+end
+title('Overlapped tumor boundary onto the original image(1) ');
