@@ -1,0 +1,82 @@
+clc; close all; clear all;
+
+% Reads the Video of the fingertip using the Videoreader. Vidoe was taken
+% using the Iphone5 camera and then was imported into MATLAB.
+
+mov = VideoReader('IMG_6672.MOV');
+nFrames = mov.NumberOfFrames;
+Fps = mov.FrameRate;
+
+% Calculating the average sum of each individual frame to extract the 
+% changes in the bloodflow in the fingertip over several frames.
+
+for i=1:nFrames;
+    videoframe = read(mov,i);
+    A(i) = (sum(sum(videoframe(:,:,1))))/(size(videoframe,1)*...
+        size(videoframe,2));
+end
+ 
+figure(1);plot(A);
+grid on;axis( [0 length(A) min(A) max(A)] );
+title('Signal representing the rate of change of bloodflow');
+xlabel('Number of Frames in the video'); ylabel('Intensity');
+
+% Extracting the signal between frequencies (using a bandpass filter)
+% corresponding to the heart rate range i.e between 40 and 240. 
+
+lower_limit_bpm = 40;
+upper_limit_bpm = 240;
+[b, a] = butter(2, [(((lower_limit_bpm)/60)/Fps)...
+    (((upper_limit_bpm)/60)/Fps)]);
+filt_a  = filter(b,a,A);
+
+filt_aa = filt_a((Fps+1):length(filt_a)); 
+figure(2);plot(filt_a); 
+title('Signal after BPF'); xlabel('Number of Frames in the video'); 
+ylabel('Intensity');
+
+% Removing the initial 1 second of the signal as it corresponds to the
+% breathing cycle.
+
+figure(3); plot(filt_aa);
+title('Signal after BPF with initial 1 sec removed'); 
+xlabel('Number of Frames in the video'); ylabel('Intensity');
+
+
+% Building a window to observe the signal under a strict environment.
+% Peaks in each window corresponds to the heartrate within that duration.
+
+window_length = 6;
+num_samples_in_window = window_length * Fps; 
+sampling_period = 0.5;
+num_samples_per_sampling_period = sampling_period* Fps;    
+
+total_iteration = round((length(filt_aa) - num_samples_in_window)/...
+    round(num_samples_per_sampling_period));
+
+for i = 1:total_iteration;
+    
+    window = (i-1)* (num_samples_per_sampling_period) + 1;
+    range_window = filt_aa(window : window + window_length * Fps);
+    orig_signal = range_window .* hann(length(range_window))';
+    psd = abs(fft(orig_signal));
+%     figure(4);plot(psd);
+%     title('Power spectral density');
+    
+    % FFT indices of frequencies where the human heartbeat is.
+    il = floor((lower_limit_bpm/60) * (size(orig_signal, 2) / Fps))+1;
+    ih = ceil((upper_limit_bpm/60)* (size(orig_signal, 2) / Fps))+1;
+    index_range = il:ih;
+
+    % Calculating the peka heartrate for each window.
+    [pks, locs] = findpeaks(psd(index_range));
+    [max_pks_val loc_max_peak] = max(pks);
+     freq_HR = index_range(locs(loc_max_peak));
+     bpm(i) = (freq_HR-1) * (Fps / size(orig_signal, 2)) * 60;
+
+end
+
+% Mean heartrate is avg of all peaks located in each window over the entire
+% duration.
+
+mean(bpm)
