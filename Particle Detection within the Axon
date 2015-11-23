@@ -1,0 +1,165 @@
+
+% reading the file. You have to download the sequence and save it in the
+% MATLAB folder so you can read the file from there using 'imread'
+% function.
+C = imread('001_a5_002_t001.tif');
+% C = I;
+% figure(1);imshow(C,[]);
+[row_c, col_c] = size(C);
+
+% % selecting the background using getrect function
+rect = getrect;
+Bg = imcrop(C,rect);
+imshow(Bg,[]);
+figure(3); imshow(C,[]);
+% % converting the file to double. operations can be easily performed on
+% % matrix that are of the form double.
+Bg = double(Bg);
+% 
+% % calculating the mean and standard deviation of the noise(background that 
+% % we selected in line 7) using the functions std2 and mean.
+std_Bg = std2(Bg);
+mean_Bg = mean(mean(Bg));
+
+% making a 5x5 matrix of a gaussian with sigma = 1.1775.
+f = fspecial('gaussian', [3 3], 1.1775);
+
+% convolution of the image with the gaussian
+B = conv2(C,f,'same');
+
+% calculating the local maxima using the conditions explained in the class.
+
+Local_max = zeros(row_c - 2,col_c - 2);
+Local_min = zeros(row_c - 2, col_c -2);
+
+for i = 2 : row_c - 2;
+for j = 2 : col_c - 2;
+if B(i, j) >= B(i-1, j-1) &&...
+B(i, j) >= B(i-1, j) &&...
+B(i, j) >= B(i-1, j+1) &&...
+B(i, j) >= B(i, j-1) &&...
+B(i, j) >= B(i, j+1) &&...
+B(i, j) >= B(i+1, j-1) &&...
+B(i, j) >= B(i+1, j) &&...
+B(i, j) >= B(i+1, j+1);
+Local_max(i, j) = 1;
+end
+end
+end
+
+% calculating local minima. similar as calculating local maxima.
+for i = 2 : row_c - 2;
+for j = 2 : col_c - 2;
+if  B(i, j) <= B(i-1, j-1) &&...
+B(i, j) <= B(i-1, j) &&...
+B(i, j) <= B(i-1, j+1) &&...
+B(i, j) <= B(i, j-1) &&...
+B(i, j) <= B(i, j+1) &&...
+B(i, j) <= B(i+1, j-1) &&...
+B(i, j) <= B(i+1, j) &&...
+B(i, j) <= B(i+1, j+1);
+Local_min(i, j) = -1;
+end
+end
+end
+
+% Zero padding has been done here to the matrix B (which is the resultant
+% of convolution of the original image and the gaussian), Local_max and
+% Local_min to include the local maximas and local minimas at the edges and
+% also to make the computation easy for calculating the local background
+% for a particular maxima.
+
+a  =zeros(10,col_c - 2);
+Local_max = [Local_max;a];
+Local_max = [a;Local_max];
+
+Local_min = [Local_min;a];
+Local_min = [a;Local_min];
+
+b = zeros(row_c - 2 + 20,10);
+Local_max = [b,Local_max];
+Local_max = [Local_max,b];
+
+Local_min = [b,Local_min];
+Local_min = [Local_min,b];
+
+a = zeros(10,col_c);
+b = zeros(row_c + 20,10);
+B = [B;a]; B = [a;B]; B = [b,B]; B = [B,b];
+
+% Finding out the co-ordinates of the Local maximas and Local minimas using
+% the funtion find.
+
+[row,col] = find(Local_min == -1);
+[row1,col1] = find(Local_max == 1);
+
+% Establishing the association of local maxima with local minima.
+% Neighbourhood of  360 pixels (which gives a very decent result for this
+% particular image sequence) is searched for each local maxima for finding
+% out the local background for that particular local maxima. I have
+% performed search using 120 (i.e. -5 to 5) pixels and 288 pixels (i.e. -8 
+% to 8) and the results excluded some of the important local maximas. 
+% Neighbourhood search can easily be modified  by increasing the m and n 
+% values in the following code (zero padding also has to be increased for 
+% this purpose). Using 360 pixels search around every local maxima excluded
+% just 1 local maxima out of all the maximas. This can be checked by typing
+% find(dummy1 < 3) on the command window. 'dummy1' calculates the number of
+% minimas (upto 4) that has been considered as background for each local 
+% maxima. The program has been written in such a way that the search stops
+% after 4 minimas are found for a particular local maxima.
+
+for i =1:length(row1);        
+    x = row1(i); y = col1(i);
+    dummy = 0;
+    I_min = 0;
+    
+    for m = -9:9;                
+        for n = -9:9;                        
+            if Local_min(x-m,y-n) == -1 && dummy <= 3;
+            dummy = dummy + 1;
+            I_min = I_min + B(x-m,y-n);
+            dummy1(i) = dummy;
+            else
+            c = 1;
+            end
+        end
+    end
+    
+     if dummy >= 3;
+     I_net(x,y) = B(x,y) - (I_min)/dummy;
+     end
+end
+
+sizeT = size(I_net);
+
+% Calculate the T values as specified in the reference.
+T = I_net/(std_Bg);
+
+% Selection of Local maxima based on Quantile
+% Q here is the quantile.
+Q = 2.4;
+
+% converting the values above threshold to 1 and below the threshold to 0
+% for easly plotting of the selected local maxima
+
+for i = 1:sizeT(1);
+    for j = 1:sizeT(2);
+        if T(i,j) < Q;
+        T(i,j) = 0;
+        else
+        T(i,j) = 1;
+        end
+    end
+end
+
+
+
+% finding the co-ordinates of the selected local maximas and plotting on to
+% the original image.
+% While plotting the selected local maximas onto the original image, you
+% see a black rectangular box around the original image. That is because of
+% the zero-padding that has been done to consider the local maximas at the
+% edges of the image.
+
+[row2,col2] = find(T==1);
+figure(2);imshow(B,[]); hold on; plot(col2,row2,'ro');
