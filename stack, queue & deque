@@ -1,0 +1,124 @@
+#include <iostream>
+#include <stack>
+#include <list>
+#include <queue>
+#include <deque>
+
+using namespace std;
+
+int main()
+{   
+   //--------------------STACK----------------------//   container adapter
+    
+   list<int> li = {1, 42, 54, 43, 75, 93};
+   for(int i : li) {
+       cout<<i<<" ";
+   }
+   cout<<endl;
+   stack<int, list<int>> si(li);
+   cout<<"list size : "<<li.size()<<" and the stack size is : "<<si.size()<<endl;
+   
+   while(!si.empty()) {
+       cout<<si.top()<<" ";
+       si.pop();
+   }
+   cout<<endl;
+   cout<<"list size : "<<li.size()<<" and the stack size is : "<<si.size()<<endl;
+   
+   stack<string> ss;
+   ss.push("one");
+   ss.push("two");
+   ss.push("three");
+   ss.push("four");
+   ss.push("five");
+   
+   while(!ss.empty()) {
+       cout<<ss.top()<<" ";
+       ss.pop();
+   }
+   cout<<endl;
+   cout<<"the size of stack ss is now : "<<ss.size()<<endl;
+   
+   //-------------------QUEUE--------------------//         container adapter
+   
+   list<int> li1 = {12, 24, 36, 48, 60, 72, 84};
+   for(int i : li1) {
+       cout<<i<<" ";
+   }
+   cout<<endl;
+   queue<int, list<int>> q(li1);
+   cout<<"the list size is : "<<li1.size()<<" and the queue size is : "<<q.size()<<endl;
+   
+   while(!q.empty()) {
+       cout<<q.front()<<" ";
+       q.pop();
+   }
+   cout<<endl;
+   cout<<"the list size is : "<<li1.size()<<" and the queue size is : "<<q.size()<<endl;
+   
+   queue<string> q1;
+   q1.push("one");
+   q1.push("two");
+   q1.push("three");
+   q1.push("four");
+   q1.push("five");
+   
+   while(!q1.empty()) {
+       cout<<q1.front()<<" ";
+       q1.pop();
+   }
+   cout<<endl;
+   cout<<"the queue size is : "<<q.size()<<endl;
+   
+   //----------------------DEQUE---------------------//         default. can push and pop from both ends.
+   
+   deque<int> dq;
+   dq.push_back(6);
+   dq.push_front(5);
+   dq.push_back(7);
+   dq.push_front(4);
+   dq.push_back(8);
+   dq.push_front(3);
+   dq.push_back(9);
+   dq.push_front(2);
+   dq.push_back(10);
+   dq.push_front(1);
+   
+   for(int i : dq) {
+       cout<<i<<" ";
+   }
+   cout<<endl;
+   
+   while(!dq.empty()) {
+       cout<<dq.back()<<" ";
+       dq.pop_back();
+   }
+   cout<<endl;
+   
+   cout<<"the size of deque is now : "<<dq.size()<<endl;
+   
+   dq.push_back(6);
+   dq.push_front(5);
+   dq.push_back(7);
+   dq.push_front(4);
+   dq.push_back(8);
+   dq.push_front(3);
+   dq.push_back(9);
+   dq.push_front(2);
+   dq.push_back(10);
+   dq.push_front(1);
+   
+   for(int i : dq) {
+       cout<<i<<" ";
+   }
+   cout<<endl;
+   
+   while(!dq.empty()) {
+       cout<<dq.front()<<" ";
+       dq.pop_front();
+   }
+   cout<<endl;
+
+   
+}
+
