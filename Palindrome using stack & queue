@@ -1,0 +1,78 @@
+// Implementation of palindrome
+// making sure the input is an integer
+// reading multiple wordsusing getline
+
+#include <iostream>
+#include <string>
+#include <stack>
+#include <queue>
+using namespace std;
+
+int main()
+{
+   //string s;
+   //cout<<"enter your name"<<endl;
+   //getline(cin,s);
+   //cout<<s<<endl;
+   
+   /*string x;
+   cout<<"enter an integere value"<<endl;
+   cin>>x;
+   while(cin.fail()) {
+       cout<<"Only integer values are accepted. Please enter an integer value."<<endl;
+       cin.clear();
+       cin.ignore(256,'\n');
+       cin>>x;
+   }*/
+  // cout<<" the value is "<<x<<endl;
+   char chArray[100];
+   int count = 0;
+   string y = " m al aya lam  i s si ma l a  y a lam";
+   int strlength = y.length();
+    for(int i = 0; i< y.length(); i++) {
+        if (y[i] == ' ') {
+           count++ ;
+        } else {
+            chArray[i-count] = y[i];
+        }
+    }
+    int chArraylen = strlength - count;
+    for (int i = 0; i < chArraylen; i++) {
+        cout<<chArray[i]<<" ";
+    }
+    
+    cout<<endl;
+    
+    stack<char> s;
+    for(int i = 0; i < chArraylen; i++) {
+        s.push(chArray[i]);
+    }
+    cout<<s.size()<<endl;
+
+    
+    queue<char> q;
+    for(int i=0; i<chArraylen; i++) {
+        q.push(chArray[i]);
+    }
+    cout<<q.size()<<endl;
+    
+    int count1 = 0;
+    while(!s.empty()) {
+        char a = s.top();
+        char b = q.front();
+        
+        if(a == b) {
+            count1++;
+        }
+        s.pop();
+        q.pop();
+    }
+    
+    if(count1 == chArraylen) {
+        cout<<"String is a palindrome"<<endl;
+    } else {
+        cout<<"It is not a palindrome"<<endl;
+    }
+    
+}
+
