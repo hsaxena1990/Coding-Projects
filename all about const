@@ -1,0 +1,31 @@
+// Example program
+#include <iostream>
+#include <string>
+using namespace std;
+
+// const Pointer to int variable ho sakta hai but pointer to const int varibale nahi ho sakta.
+
+int main()
+{
+  int x = 5;
+  const int *ptr = &x;   // pointer to a const int. pointer cant modify the value of the variable but variable itslef can change its value since the variable is not const.
+  cout<<*ptr<<endl;
+  x = 8;
+  cout<<*ptr<<endl;
+  
+  const int y = 5;
+  ptr = &y;             // pointer to a const int. neither the pointer nor the variable can change its value since the varibale is also const but pointer can point to another address in memory.
+  cout<<*ptr<<endl;
+  
+  int z = 10;
+  int *const ptr1 = &z; // const ptr to an int. ptr cannot point to any other address in the memory but it can change the value of the variable.
+  cout<<*ptr1<<endl;
+  *ptr1 = 17;
+  cout<<*ptr1<<endl;
+  
+  const int a = 23;
+  const int *const ptr2 = &a; // const pointer to a const int. neither the value nor the address pointer points to can change. 
+  cout<<*ptr2<<endl;
+  
+  
+}
