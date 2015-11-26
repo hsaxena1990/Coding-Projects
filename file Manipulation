@@ -1,0 +1,35 @@
+// reading and writing to a file.
+// counting the number of occurences of a word in an input file
+
+#include <iostream>
+#include <fstream>
+#include <map>
+using namespace std;
+
+int main()
+{
+    int a = 103;
+   ofstream outfile("samples.txt");
+   if(outfile.is_open()) {
+       outfile << "This is a string"<<endl;
+       outfile<<"The value of a is: "<< a<<endl;
+   } else {
+       cout<<"error writing to a file!"<<endl;
+   }
+   outfile.close();
+   
+   map<string, int> simap;
+   string s;
+   ifstream infile("samples.txt");
+   while(!infile.eof()) {
+       infile >> s;
+       auto rp = simap.find(s);
+       if (rp == simap.end()) {
+           simap.insert({s,1});
+       } else {
+           rp->second += 1;
+       }
+   }
+   infile.close();
+}
+
