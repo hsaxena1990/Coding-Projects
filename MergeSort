@@ -1,0 +1,67 @@
+#include <iostream>
+
+using namespace std;
+
+int* Merge(int l[], int lsize, int r[], int rsize, int a[]) {
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    while (i < lsize && j < rsize) {
+        if(l[i] <= r[j]) {
+            a[k] = l[i];
+            i++;
+        } else {
+            a[k] = r[j];
+            j++;
+        }
+        k++;
+    }
+    while( i < lsize) {
+        a[k] = l[i];
+        k++;
+        i++;
+    }
+    while( j < rsize) {
+        a[k] = r[j];
+        j++;
+        k++;
+    }
+    return a;
+}
+
+int* MergeSort(int a[], int size) {
+    if (size < 2) {
+        return a;
+    }
+    int mid = size/2;
+    int l[mid];
+    int r[size - mid];
+    for(int i = 0; i < mid; i++) {
+        l[i] = a[i];
+    }
+    for(int i = mid; i < size; i++) {
+        r[i - mid] = a[i];
+    }
+    MergeSort(l, mid);
+    MergeSort(r, size - mid);
+    int *ptr;
+    ptr = Merge(l, mid, r, size - mid, a);
+    
+    for(int i = 0; i < size; i++) {
+        a[i] = *(ptr+i);
+    }
+    return a;
+}
+
+int main()
+{
+   int a[] = {243,53,532,24,1,32,25,323,452,24,63,13,453,25,5,53,23,52};
+   int sz_a = sizeof(a)/sizeof(a[0]);
+   int* ptr;
+   ptr = MergeSort(a, sz_a);
+   for(int i = 0; i < sz_a; i++) {
+       cout<<*(ptr+i)<<" ";
+   }
+   return 0;
+}
+
