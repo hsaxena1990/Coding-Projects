@@ -1,0 +1,58 @@
+// Returning pointer to an array
+// static variables
+// changing a value with reference 
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int* changeVal(int a[], int size) { // returning a pointer to an array
+    
+    static int b[5] = {0};          // static here makes sure that the local variable is not out of scope
+    for(int i = 0; i < size; i++) {
+        b[i] = a[i]+5;
+    }
+    return b;
+}
+
+int changeVal1(int& z) {            // changing the value using reference
+    z = 63;
+    return z;
+}
+
+int staticVarTest(int a) {          // test for static variables. retaining the values between function calls.
+    static int count = 0;
+    for(int i = 0; i < 5; i++) {
+        count++;
+    }
+    return count;
+}
+
+int main()
+{
+    int a[5] = {23, 34, 45, 653, 12};
+    int *ptr1 = a;
+    for (int i = 0; i< 5; i++) {
+        cout<<*(ptr1+i)<<" ";
+    }
+    
+    cout<<endl;
+    
+    int *ptr = changeVal(a,5);
+    for (int i = 0; i< 5; i++) {
+        cout<<*(ptr+i)<<" " ;
+    }
+    
+    cout<<endl;
+    
+    int z  = 12;
+    int ref = changeVal1(z);
+    cout<<ref<<" " <<z<<endl;
+    
+    int countNum = staticVarTest(2);
+    cout<<countNum<<endl;
+    countNum = staticVarTest(2);
+    cout<<countNum<<endl;
+    
+    
+}
