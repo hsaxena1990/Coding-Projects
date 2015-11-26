@@ -1,0 +1,59 @@
+// Inheritance & Polymorphism
+// virtual functions
+// virtual destructor
+// calling the base constructor from the derived class
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Shape {
+    
+    int x;
+    public:
+        Shape(int val) {
+            x = val;
+            cout<<"Base"<<endl;
+        }
+        virtual ~Shape() {
+            cout<<"Base d"<<endl;
+        }
+        int getX(void) {
+            return x;
+        }
+        virtual int area(int z) {
+            return x*z;
+        }
+};
+
+class rect: public Shape {
+    int y;
+    public:
+    rect(int val, int val1) : Shape(val){
+        cout<<"Derived"<<endl;
+        y = val1;
+    }
+    virtual ~rect() {
+        cout<<"Derived d"<<endl;
+    }
+    int getY(void) {
+        return y;
+    }
+    int area(int z) {
+        return y*z;
+    }
+};
+        
+int main()
+{
+    rect r(15,102);
+    int xval = r.getX();
+    int yval = r.getY();
+    cout<<xval<<" "<<yval<<endl;
+    
+    Shape *s = &r;
+    int rectA = s->area(20);
+    cout<<rectA<<endl;
+    
+  
+}
