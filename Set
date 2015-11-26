@@ -1,0 +1,45 @@
+// Sets important points
+
+// find returns an iterator which can be accesses as *p1.
+// insert returns a pair where first element in pair is an iterator which can be accesses as *rp.first and second value is a bool like in map.
+
+#include <iostream>
+#include <set>
+using namespace std;
+
+int main()
+{
+   set<string> s = {"one", "two", "three", "four", "five"};
+   for(auto p : s) {
+       cout<< p <<"     ";
+   }
+   
+   cout<<s.size()<<endl;
+   
+   s.insert("six");
+   for(auto p : s) {
+       cout<< p <<"     ";
+   }
+   
+   cout<<endl;
+   
+   auto rp = s.insert("seven");
+   if(rp.second) {
+       cout<<"Insert succeeded "<<*rp.first<<endl;
+   } else {
+       cout<<"Input failed"<<endl;
+   }
+   
+   auto p1 = s.find("six");
+   if (p1 != s.end()) {
+       cout<<"erasing "<<*p1<<endl;
+   } else {
+       cout<<"not in the set"<<endl;
+   }
+   
+   for(auto p : s) {
+       cout<< p <<"     ";
+   }
+   
+}
+
