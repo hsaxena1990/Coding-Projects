@@ -1,0 +1,43 @@
+// Maps important points to remember
+
+// find function (strmap.find()) returns an iterator
+// for each loop return a pair
+// insert function(strmap.insert({"sdfdsf", "sdfadff"})) returns a pair where first element in pair acts as an iterator
+
+#include <iostream>
+#include <map>
+using namespace std;
+
+int main()
+{
+   map<string, string> strmap = { {"papa", "father"}, {"maa", "mother"}, {"dada", "brother"}, {"mein", "me"}};
+   cout<<strmap.size()<<endl;
+   
+   //cout<<"maa is "<<strmap["maa"]<<endl;
+   //cout<<"papa is "<<strmap.find("papa")->second<<endl;
+   
+   strmap.insert({"sisi", "sister"});
+   for(auto p : strmap) {                           // for each loop returns a pair
+       cout<<p.first<<" "<<p.second<<endl;
+   }
+   
+   auto rp = strmap.insert({"dost", "friend"});     // insert returns a pair where first value in pair points to the inserted element and act as an iterator
+   if(rp.second) {
+       cout<<"Insert succeeded "<<rp.first->first<<" "<<rp.first->second<<endl;
+   } else {
+       cout<<"Insert failed!"<<endl;
+   }
+   
+   auto p1 = strmap.find("sisi");                   // find retrun an iterator
+   if(p1 != strmap.end()) {
+       cout<<"deleting element "<<p1->first<<" "<<p1->second<<endl;
+       strmap.erase(p1);
+   } else {
+       cout<<"Not found"<<endl;
+   }
+   
+   for (auto p : strmap) {
+       cout<<p.first<<" "<<p.second<<endl;
+   }
+}
+
