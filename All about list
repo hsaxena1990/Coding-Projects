@@ -1,0 +1,80 @@
+// All about list. Inserting and deleting multiple elements using loops.
+
+#include <iostream>
+#include <list>
+
+using namespace std;
+
+int main() {
+    
+    list<int> li1 = {12, 24, 36, 48, 72, 84, 96, 108, 120};
+    list<int>::iterator itbegin = li1.begin();
+    list<int>::iterator itend = li1.end();
+    
+    
+    for(auto it = itbegin; it != itend; it++) {
+        cout<<*it<<" ";
+    }
+    cout<<endl;
+    cout<<li1.front()<<" "<<li1.back()<<" "<<li1.size()<<endl;
+    
+    auto it = li1.begin();                          // insert 60 before 72
+    while((*it++ != 72) && (it != li1.end())) {
+        if(*it == 72) {
+         li1.insert(it,60);
+        }
+    }
+    
+    auto it1 = li1.begin();                         // insert 54 before 108
+    while((*it1++ != 108) && (it1 != li1.end())) {
+        if(*it1 == 108) {
+         li1.insert(it1,54);
+         li1.insert(it1,82);
+         li1.insert(it1, 104);
+         li1.insert(it1, 154);
+        }
+    }
+    
+    for(int v : li1) {                              // iterating using for each loop
+        cout<<v<<" ";
+    }
+    cout<<endl;
+    
+    auto it2 = li1.begin();                         // deleting 54 from the list
+    while((*it2++ != 54) && (it2 != li1.end())){
+        if(*it2 == 54) {
+            li1.erase(it2);
+        }
+    }
+    
+    
+    for(int v : li1) {                              // iterating using for each loop
+        cout<<v<<" ";
+    }
+    cout<<endl;
+    
+    auto it3 = li1.begin();
+    auto it4 = li1.begin();
+    
+    while((*it3++ != 82) && (it3 != li1.end())) {
+        if(*it3 == 82) {
+            while((*it4++ != 154) && (it4 != li1.end())) {
+                if(*it3 == 82 && *it4 == 154) {
+                    li1.erase(it3,it4);
+                }
+            }
+        }
+    }
+    
+    for(int v : li1) {                              // iterating using for each loop
+        cout<<v<<" ";
+    }
+    cout<<endl;
+    auto it5 = li1.begin();                         
+    li1.insert(it5,90);                             // inserting into a list
+    li1.insert(it5,108);
+    for(int v : li1) {                              // iterating using for each loop
+        cout<<v<<" ";
+    }
+    
+}
