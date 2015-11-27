@@ -1,0 +1,64 @@
+#include <iostream>
+#include <set>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+    string s1 = "orchenfstra";
+    string s2 = "arthenofrcs";
+    if(s1.length() != s2.length()) {
+        cout<<"Not an anagram"<<endl;
+        exit(1);
+    }
+    
+    char s1_charArr[s1.length()];
+    char s2_charArr[s2.length()];
+    
+    for(int i = 0; i < s1.length(); i++) {
+        s1_charArr[i] = s1[i];
+    }
+    for(int i = 0; i < s2.length(); i++) {
+        s2_charArr[i] = s2[i];
+    }
+    
+    multiset<char> sc1;
+    multiset<char> sc2;
+    
+    for(int i = 0; i < s1.length(); i++) {
+        sc1.insert(s1_charArr[i]);
+        sc2.insert(s2_charArr[i]);
+    }
+    int i = 0;
+    
+    int a[s1.length()];
+    int b[s2.length()];
+
+    for(auto it = sc1.begin(); it != sc1.end(); it++) {
+        a[i] = *it;
+        i++;
+    }
+    i = 0;
+    for(auto it = sc2.begin(); it != sc2.end(); it++) {
+        b[i] = *it;
+        i++;
+    }
+    int count = 0;
+    for(int i = 0; i < s1.length(); i++) {
+        if(a[i] == b[i]) {
+            count++;
+        }
+    }
+    //cout<<count<<endl;
+    
+    if(count == s1.length()) {
+        cout<<"These two strings are anagrams"<<endl;
+    } else {
+        cout<<"These two strings are not anagrams"<<endl;
+    }
+    
+   
+   return 0;
+}
+
